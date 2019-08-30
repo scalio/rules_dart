@@ -1,11 +1,20 @@
 load(
     ":common.bzl",
+    "has_dart_sources",
+    "make_package_uri",
+)
+load(
+    "//dart/build_rules/common:context.bzl",
+    "make_dart_context",
+)
+load(
+    "//dart/build_rules/common:constants.bzl",
     "api_summary_extension",
     "dart_filetypes",
+)
+load(
+    "//dart/build_rules/common:path.bzl",
     "filter_files",
-    "has_dart_sources",
-    "make_dart_context",
-    "make_package_uri",
 )
 
 def ddc_action(ctx, dart_ctx, ddc_output, source_map_output):

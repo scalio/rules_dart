@@ -1,12 +1,18 @@
 load(
     ":common.bzl",
     "compute_layout",
-    "dart_filetypes",
-    "filter_files",
     "has_dart_sources",
     "layout_action",
     "make_package_uri",
     "package_spec_action",
+)
+load(
+    "//dart/build_rules/common:constants.bzl",
+    "dart_filetypes",
+)
+load(
+    "//dart/build_rules/common:path.bzl",
+    "filter_files",
 )
 
 def analyze_action(

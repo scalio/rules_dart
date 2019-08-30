@@ -1,4 +1,12 @@
-load(":common.bzl", "make_dart_context", "relative_path", "strip_extension")
+load(
+    "//dart/build_rules/common:context.bzl",
+    "make_dart_context",
+)
+load(
+    "//dart/build_rules/common:path.bzl",
+    "relative_path",
+    "strip_extension",
+)
 load(":dart2js.bzl", "dart2js_action")
 
 def dart_web_application_impl(ctx):

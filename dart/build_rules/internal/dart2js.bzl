@@ -1,5 +1,9 @@
-load(":common.bzl", "collect_dart_context", "make_package_uri")
-
+load(":common.bzl", "make_package_uri")
+load(
+    "//dart/build_rules/common:context.bzl",
+    "make_dart_context",
+    "collect_dart_context",
+)
 def dart2js_action(
         ctx,
         dart_ctx,

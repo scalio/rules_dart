@@ -1,4 +1,9 @@
-load(":common.bzl", "make_dart_context", "package_spec_action")
+load(":common.bzl", "package_spec_action")
+
+load(
+    "//dart/build_rules/common:context.bzl",
+    "make_dart_context",
+)
 
 def dart_vm_test_impl(ctx):
     """Implements the dart_vm_test() rule."""

@@ -12,7 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-load(":common.bzl", "make_dart_context", "package_spec_action")
+load(":common.bzl", "package_spec_action")
+load(
+    "//dart/build_rules/common:context.bzl",
+    "make_dart_context",
+)
 load(":dart_vm_snapshot.bzl", "dart_vm_snapshot_action")
 
 def _dart_vm_binary_action(
@@ -88,14 +92,13 @@ def _dart_vm_binary_action(
 
 _default_binary_attrs = {
     "_dart_vm": attr.label(
-        allow_files = True,
-        single_file = True,
+        allow_single_file = True,
         executable = True,
         cfg = "host",
         default = Label("@dart_sdk//:dart_vm"),
     ),
     "_entrypoint_template": attr.label(
-        single_file = True,
+        allow_single_file = True,
         default = Label("//dart/build_rules/templates:dart_vm_binary"),
     ),
 }

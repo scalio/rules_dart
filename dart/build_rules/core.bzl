@@ -24,7 +24,6 @@ dart_library = rule(
         ),
         "data": attr.label_list(
             allow_files = True,
-            cfg = "data",
         ),
         "enable_ddc": attr.bool(default = True),
         "enable_summaries": attr.bool(default = True),

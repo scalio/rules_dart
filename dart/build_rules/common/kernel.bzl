@@ -188,16 +188,14 @@ kernel_vm_aspect = aspect(
     attrs = {
         "_sdk_summary": attr.label(
             default = Label(_sdk_summary_dill()),
-            allow_files = True,
-            single_file = True,
+            allow_single_file = True,
         ),
         "_kernel_worker_snapshot": attr.label(
             default = Label(_kernel_worker_snapshot()),
-            single_file = True,
+            allow_single_file = True,
         ),
         "_dart_vm": attr.label(
-            allow_files = True,
-            single_file = True,
+            allow_single_file = True,
             executable = True,
             cfg = "host",
             default = Label(_dartvm_target()),

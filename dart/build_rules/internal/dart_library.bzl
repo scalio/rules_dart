@@ -1,7 +1,13 @@
 load(
     ":common.bzl",
-    "compute_ddc_output_dir",
     "has_dart_sources",
+)
+load(
+    "//dart/build_rules/common:ddc.bzl",
+    "compute_ddc_output_dir",
+)
+load(
+    "//dart/build_rules/common:context.bzl",
     "make_dart_context",
 )
 

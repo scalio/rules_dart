@@ -34,7 +34,7 @@ skylark_library(
     srcs = ["label.bzl"],
 )
 
-bzl_library(
+skylark_library(
     name = "package_spec",
     srcs = ["package_spec.bzl"],
     deps = [
@@ -43,7 +43,7 @@ bzl_library(
     ],
 )
 
-bzl_library(
+skylark_library(
     name = "kernel",
     srcs = ["kernel.bzl"],
     deps = [

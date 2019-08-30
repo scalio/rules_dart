@@ -31,8 +31,7 @@ load("//dart/build_rules/internal:dart_vm_test.bzl", "dart_vm_test_impl")
 
 _dart_vm_binary_attrs = dicts.add(internal_dart_vm.common_attrs, {
     "script_file": attr.label(
-        allow_files = True,
-        single_file = True,
+        allow_single_file = True,
         mandatory = True,
     ),
     "script_args": attr.string_list(),
@@ -44,7 +43,6 @@ _dart_vm_binary_attrs = dicts.add(internal_dart_vm.common_attrs, {
     ),
     "data": attr.label_list(
         allow_files = True,
-        cfg = "data",
     ),
     "deps": attr.label_list(providers = ["dart"]),
     "snapshot": attr.bool(default = True),
@@ -82,8 +80,7 @@ dart_vm_snapshot = rule(
 dart_vm_test = rule(
     attrs = {
         "script_file": attr.label(
-            allow_files = True,
-            single_file = True,
+            allow_single_file = True,
             mandatory = True,
         ),
         "script_args": attr.string_list(),
@@ -95,18 +92,16 @@ dart_vm_test = rule(
         ),
         "data": attr.label_list(
             allow_files = True,
-            cfg = "data",
         ),
         "deps": attr.label_list(providers = ["dart"]),
         "_dart_vm": attr.label(
-            allow_files = True,
-            single_file = True,
+            allow_single_file = True,
             executable = True,
             cfg = "host",
             default = Label("@dart_sdk//:dart_vm"),
         ),
         "_entrypoint_template": attr.label(
-            single_file = True,
+            allow_single_file = True,
             default = Label(
                 "//dart/build_rules/templates:dart_vm_test_template",
             ),

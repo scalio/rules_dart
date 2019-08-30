@@ -1,8 +1,12 @@
 load(
     ":common.bzl",
     "layout_action",
-    "make_dart_context",
     "package_spec_action",
+)
+
+load(
+    "//dart/build_rules/common:context.bzl",
+    "make_dart_context",
 )
 
 def dart_vm_snapshot_action(

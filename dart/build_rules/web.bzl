@@ -29,8 +29,7 @@ load(":vm.bzl", "dart_vm_binary")
 dart_web_application = rule(
     attrs = {
         "script_file": attr.label(
-            allow_files = True,
-            single_file = True,
+            allow_single_file = True,
             mandatory = True,
         ),
         "srcs": attr.label_list(
@@ -39,7 +38,6 @@ dart_web_application = rule(
         ),
         "data": attr.label_list(
             allow_files = True,
-            cfg = "data",
         ),
         "deps": attr.label_list(providers = ["dart"]),
         "create_packages_dir": attr.bool(default = True),
@@ -56,8 +54,7 @@ dart_web_application = rule(
         "trust_type_annotations": attr.bool(default = False),
         # tools
         "_dart2js": attr.label(
-            allow_files = True,
-            single_file = True,
+            allow_single_file = True,
             executable = True,
             cfg = "host",
             default = Label("@dart_sdk//:dart2js"),
@@ -67,8 +64,7 @@ dart_web_application = rule(
             default = Label("@dart_sdk//:dart2js_support"),
         ),
         "_dart2js_helper": attr.label(
-            allow_files = True,
-            single_file = True,
+            allow_single_file = True,
             executable = True,
             cfg = "host",
             default = Label("//dart/build_rules/tools:dart2js_helper"),
@@ -88,13 +84,13 @@ dart_ddc_bundle = rule(
         "output_dir": attr.string(default = ""),
         "output_html": attr.string(default = ""),
         "_ddc_concat": attr.label(
-            single_file = True,
+            allow_single_file = True,
             executable = True,
             cfg = "host",
             default = Label("//dart/build_rules/tools:ddc_concat"),
         ),
         "_ddc_html_generator": attr.label(
-            single_file = True,
+            allow_single_file = True,
             executable = True,
             cfg = "host",
             default = Label("//dart/tools/ddc_html_generator"),

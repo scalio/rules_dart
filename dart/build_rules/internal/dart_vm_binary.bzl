@@ -66,10 +66,10 @@ def _dart_vm_binary_action(
         executable = True,
         substitutions = {
             "%workspace%": ctx.workspace_name,
-            "%dart_vm%": ctx.executable._dart_vm.short_path,
-            "%package_spec%": package_spec.short_path,
+            "%dart_vm%": ctx.executable._dart_vm.path,
+            "%package_spec%": package_spec.path,
             "%vm_flags%": " ".join(vm_flags),
-            "%script_file%": script_file.short_path,
+            "%script_file%": script_file.path,
             "%script_args%": " ".join(script_args),
         },
     )

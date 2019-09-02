@@ -22,7 +22,7 @@ elif [[ -z "$RUNFILES" ]]; then
   fi
 fi
 export BAZEL_WORKSPACE_NAME="%workspace%"
-dart="$RUNFILES/%workspace%/%dart_vm%"
-package_spec="$RUNFILES/%workspace%/%package_spec%"
-script_file="$RUNFILES/%workspace%/%script_file%"
+dart="$RUNFILES/%dart_vm%"
+package_spec="$RUNFILES/%package_spec%"
+script_file="$RUNFILES/%script_file%"
 "$dart" --packages="$package_spec" %vm_flags% "$script_file" %script_args% "$@"

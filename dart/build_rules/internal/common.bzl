@@ -86,6 +86,76 @@ def package_spec_action(ctx, dart_ctx, output):
         content = content,
     )
 
+def  _symlink_bash(ctx, src_files, dest_files):
+    targets = []
+    dests = []
+    for src_file, dest_file in zip(src_files, dest_files):
+        dest_dir = dest_file.path[:dest_file.path.rfind("/")]
+        link_target = relative_path(dest_dir, src_file.path)
+        targets += [link_target]
+        dests += [dest_file.path]
+    
+    sh = ctx.actions.declare_file(ctx.label.name + "_layout.sh")
+    content = "#!/bin/bash\n"
+    for target, dest in zip(targets, dests):
+        content += "ln -s '%s' '%s'\n" % (target, dest)
+
+    ctx.actions.write(
+        output = sh,
+        content = content,
+        is_executable = True,
+    )
+
+    ctx.actions.run(
+        inputs = src_files,
+        tools = [sh],
+        outputs = dest_files,
+        executable = sh,
+        mnemonic = "DartLayout",
+        progress_message = "Building flattened source layout for %s" % ctx,
+        use_default_shell_env = True,
+    )
+
+def _symlink_cmd(ctx, src_files, dest_files):
+    targets = []
+    dests = []
+    for src_file, dest_file in zip(src_files, dest_files):
+        dest_dir = dest_file.path[:dest_file.path.rfind("/")]
+        link_target = src_file.path
+        targets += [link_target]
+        dests += [dest_file.path]
+    
+    bat = ctx.actions.declare_file(ctx.label.name + "_layout.bat")
+    content = ""
+    for target, dest in zip(targets, dests):
+        content += "@mklink /h \"%s\" \"%s\" >NUL\n" % (
+            dest.replace("/", "\\"),
+            target.replace("/", "\\"),
+        )
+
+    ctx.actions.write(
+        output = bat,
+        content = content,
+        is_executable = True,
+    )
+
+    ctx.actions.run(
+        inputs = src_files,
+        tools = [bat],
+        outputs = dest_files,
+        executable = "cmd.exe",
+        arguments = ["/C", bat.path.replace("/", "\\")],
+        mnemonic = "DartLayout",
+        progress_message = "Building flattened source layout for %s" % ctx,
+        use_default_shell_env = True,
+    )
+
+def _symlinks(ctx, src_files, dest_files):
+    if ctx.attr.is_windows:
+        _symlink_cmd(ctx, src_files, dest_files)
+    else:
+        _symlink_bash(ctx, src_files, dest_files)
+
 def layout_action(ctx, srcs, output_dir):
     """Generates a flattened directory of sources.
 
@@ -100,7 +170,7 @@ def layout_action(ctx, srcs, output_dir):
     Returns:
       A map from input file short_path to File in output_dir.
     """
-    commands = []
+    # commands = []
     output_files = {}
 
     # TODO(cbracken) extract next two lines to func
@@ -116,27 +186,11 @@ def layout_action(ctx, srcs, output_dir):
             dest_file = ctx.actions.declare_file(
                 output_dir + short_better_path,
             )
-        dest_dir = dest_file.path[:dest_file.path.rfind("/")]
-        link_target = relative_path(dest_dir, src_file.path)
-        commands += ["ln -s '%s' '%s'" % (link_target, dest_file.path)]
+
         output_files[src_file.short_path] = dest_file
 
-    # Emit layout script.
-    layout_cmd = ctx.actions.declare_file(ctx.label.name + "_layout.sh")
-    ctx.actions.write(
-        output = layout_cmd,
-        content = "#!/bin/bash\n" + "\n".join(commands),
-        is_executable = True,
-    )
+    _symlinks(ctx, list(srcs), output_files.values())
 
-    # Invoke the layout action.
-    ctx.actions.run(
-        inputs = list(srcs),
-        outputs = output_files.values(),
-        executable = layout_cmd,
-        progress_message = "Building flattened source layout for %s" % ctx,
-        mnemonic = "DartLayout",
-    )
     return output_files
 
 # Check if `srcs` contains at least some dart files

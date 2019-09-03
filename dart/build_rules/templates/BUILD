@@ -1,9 +1,14 @@
 package(default_visibility = ["//visibility:public"])
 
 filegroup(
-    name = "dart_vm_binary",
-    srcs = ["dart_vm_binary.sh"],
+    name = "dart_vm_binary.sh",
+    srcs = ["dart_vm_binary.template.sh"],
 )
+filegroup(
+    name = "dart_vm_binary.bat",
+    srcs = ["dart_vm_binary.template.bat"],
+)
+
 
 filegroup(
     name = "dart_vm_test_template",

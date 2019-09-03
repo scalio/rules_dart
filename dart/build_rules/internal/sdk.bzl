@@ -18,7 +18,10 @@ package(default_visibility = [ "//visibility:public" ])
 
 filegroup(
   name = "dart_vm",
-  srcs = ["bin/dart"],
+  srcs = select({
+    "@bazel_tools//src/conditions:host_windows": ["bin/dart.exe"],
+    "//conditions:default": ["bin/dart"],
+  }),
 )
 
 filegroup(
@@ -91,10 +94,10 @@ filegroup(
 
 filegroup(
     name = "lib_files",
-    srcs = glob([
+    srcs = [
         ":lib_files_no_summaries",
         ":sdk_summaries",
-    ]),
+    ],
 )
 
 """

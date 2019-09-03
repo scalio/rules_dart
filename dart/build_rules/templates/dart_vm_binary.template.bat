@@ -1,0 +1,1 @@
+bash.exe "%RUNFILES%\\%sh_file%" %*

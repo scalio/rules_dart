@@ -65,7 +65,17 @@ def _dart_vm_binary_impl(ctx):
         runfiles = runfiles,
     )
 
-dart_vm_binary = rule(
+def dart_vm_binary(**kwargs):
+    _dart_vm_binary(
+        is_windows = select({
+            "@bazel_tools//src/conditions:host_windows": True,
+            "//conditions:default": False,
+        }),
+        **kwargs,
+    )
+    
+
+_dart_vm_binary = rule(
     attrs = _dart_vm_binary_attrs,
     executable = True,
     implementation = _dart_vm_binary_impl,
@@ -98,13 +108,11 @@ dart_vm_test = rule(
             allow_single_file = True,
             executable = True,
             cfg = "host",
-            default = Label("@dart_sdk//:dart_vm"),
+            default = "@dart_sdk//:dart_vm",
         ),
         "_entrypoint_template": attr.label(
             allow_single_file = True,
-            default = Label(
-                "//dart/build_rules/templates:dart_vm_test_template",
-            ),
+            default = "//dart/build_rules/templates:dart_vm_test_template",
         ),
     },
     executable = True,

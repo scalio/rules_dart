@@ -59,9 +59,30 @@ def _dart_vm_binary_action(
         output = package_spec,
     )
 
+   # Compute runfiles.
+    runfiles_files = dart_ctx.transitive_data.files + [
+        ctx.executable._dart_vm,
+        ctx.outputs.executable,
+        package_spec,
+    ]
+    
     # Emit entrypoint script.
+    if ctx.attr.is_windows:
+        sh_templ_output = ctx.actions.declare_file(ctx.label.name + ".sh")
+        runfiles_files += [sh_templ_output]
+        ctx.template_action(
+            output = ctx.outputs.executable,
+            template = ctx.file._entrypoint_bat_template,
+            executable = True,
+            substitutions = {
+                "%sh_file%": sh_templ_output.path.replace("/", "\\"),
+            },
+        )
+    else:
+        sh_templ_output = ctx.outputs.executable
+
     ctx.template_action(
-        output = ctx.outputs.executable,
+        output = sh_templ_output,
         template = ctx.file._entrypoint_template,
         executable = True,
         substitutions = {
@@ -74,12 +95,6 @@ def _dart_vm_binary_action(
         },
     )
 
-    # Compute runfiles.
-    runfiles_files = dart_ctx.transitive_data.files + [
-        ctx.executable._dart_vm,
-        ctx.outputs.executable,
-        package_spec,
-    ]
     if snapshot:
         runfiles_files += [out_snapshot]
     else:
@@ -95,12 +110,17 @@ _default_binary_attrs = {
         allow_single_file = True,
         executable = True,
         cfg = "host",
-        default = Label("@dart_sdk//:dart_vm"),
+        default = "@dart_sdk//:dart_vm",
     ),
     "_entrypoint_template": attr.label(
         allow_single_file = True,
-        default = Label("//dart/build_rules/templates:dart_vm_binary"),
+        default = "//dart/build_rules/templates:dart_vm_binary.sh",
     ),
+    "_entrypoint_bat_template": attr.label(
+        allow_single_file = True,
+        default = "//dart/build_rules/templates:dart_vm_binary.bat",
+    ),
+    "is_windows": attr.bool(mandatory = True),
 }
 
 internal_dart_vm = struct(

@@ -78,22 +78,22 @@ _codegen_binary_attrs = dicts.add(dart_vm.common_attrs, {
         allow_single_file = True,
     ),
     "_sdk_lib_files": attr.label(
-        default = Label(SDK_LIB_FILES),
+        default = SDK_LIB_FILES,
         allow_single_file = True,
     ),
     "_sdk_summary": attr.label(
-        default = Label(_sdk_summary_dill()),
+        default = _sdk_summary_dill(),
         allow_single_file = True,
     ),
     "_kernel_worker_snapshot": attr.label(
-        default = Label(_kernel_worker_snapshot()),
+        default = _kernel_worker_snapshot(),
         allow_single_file = True,
     ),
     "_dart_vm": attr.label(
         allow_single_file = True,
         executable = True,
         cfg = "host",
-        default = Label(_dartvm_target()),
+        default = _dartvm_target(),
     ),
 })
 
